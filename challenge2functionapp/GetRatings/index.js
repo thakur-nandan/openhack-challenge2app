@@ -40,7 +40,7 @@ module.exports = async function (context, req) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(docs)
+        body: (status == 404) ? '{"errorMessage": "Ratings not found"}' : JSON.stringify(docs)
       };
       //assert.equal(2, docs.length);
     } 
