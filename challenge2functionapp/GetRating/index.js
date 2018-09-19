@@ -12,6 +12,9 @@ module.exports = async function (context, req) {
 
   // COllection
   const collectionName = 'rating-collection';
+
+  // client reference
+  let client;
   
   try {
     // Use connect method to connect to the Server
