@@ -4,7 +4,7 @@ const assert = require('assert');
 module.exports = async function (context, req) {
 
 
-  if (req.query.id || (req.body && req.body.id)) {
+  if (req.query.ratingId || (req.body && req.body.ratingId)) {
 
         context.log('JavaScript HTTP trigger function processed a request.');
 
@@ -32,14 +32,14 @@ module.exports = async function (context, req) {
           //assert.equal(3, r.insertedCount);
 
           // Get first two documents that match the query
-          const docs = await col.find({id:req.query.id}).limit(1).toArray();
+          const docs = await col.find({id:req.query.ratingId}).limit(1).toArray();
           //assert.equal(2, docs.length);
           context.log("Docs : ", docs.length)
           if(docs.length===0)
           {
             context.log("Zero length Encountered")
              context.res = {
-                status: 400,
+                status: 404,
                 body: "Id not found in DB"
               };
           }

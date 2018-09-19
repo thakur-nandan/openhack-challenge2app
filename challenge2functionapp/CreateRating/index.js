@@ -6,21 +6,21 @@ const assert = require('assert');
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
-    context.log("UserID = " + req.query.userId + "PdtId = " + req.query.pdtId)
+    context.log("UserID = " + req.body.userId + "productId = " + req.body.productId)
     const getUserEndPoint = "https://serverlessohuser.trafficmanager.net/api/GetUser?userId="
 
-    let response = await fetch(getUserEndPoint+req.query.userId);
+    let response = await fetch(getUserEndPoint+req.body.userId);
     let userDetails = await response.json()
     if(userDetails.userId) {
     	const getPdtEndPoint = "https://serverlessohproduct.trafficmanager.net/api/GetProduct?productId="
-    	let PdtResponse = await fetch(getPdtEndPoint+req.query.pdtId);
+    	let PdtResponse = await fetch(getPdtEndPoint+req.body.productId);
     	let PdtDetails = await PdtResponse.json()
 
     	if(PdtDetails.productId) {
     		let id = uuidv1();
     		let timeStamp = new Date()
 
-    		if(req.query.rating && Number.isInteger(parseInt(req.query.rating)) && parseInt(req.query.rating)>=0 && parseInt(req.query.rating)<=5){
+    		if(req.body.rating && Number.isInteger(parseInt(req.body.rating)) && parseInt(req.body.rating)>=0 && parseInt(req.body.rating)<=5){
 
     			//MongoDB Operation
 
@@ -37,11 +37,11 @@ module.exports = async function (context, req) {
 				  let dbResponse = await client.db(dbName).collection('rating-collection').insertOne(
 				  	{
 					  "id": id,
-					  "userId": req.query.userId,
-					  "productId": req.query.pdtId,
+					  "userId": req.body.userId,
+					  "productId": req.body.productId,
 					  "timestamp": timeStamp,
 					  "locationName": "Sample ice cream shop",
-					  "rating": parseInt(req.query.rating),
+					  "rating": parseInt(req.body.rating),
 					  "userNotes": "I love the subtle notes of orange in this ice cream!"
 					}
 				  )
@@ -59,7 +59,7 @@ module.exports = async function (context, req) {
     		}
     	}
     	else{
-    		context.res = {body: "Please pass a valid pdtId on the query string"}
+    		context.res = {body: "Please pass a valid productId on the query string"}
     	}
     }
     else{

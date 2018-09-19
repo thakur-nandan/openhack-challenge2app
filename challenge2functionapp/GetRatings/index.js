@@ -33,9 +33,10 @@ module.exports = async function (context, req) {
       // Get all documents that match the query
       const docs = await col.find({"userId": userId}).toArray();
       context.log('Length of the database is:' + docs.length);
+      const status = (docs.length == 0) ? 404 : 200;
 
       context.res = {
-        status: 200,
+        status: status,
         headers: {
           "Content-Type": "application/json"
         },
