@@ -1,33 +1,54 @@
-module.exports = function (context, req) {
+const MongoClient = require('mongodb').MongoClient;
+const assert = require('assert');
 
-    context.log('JavaScript HTTP trigger function processed a request.');
+module.exports = async function (context, req) {
+  context.log('JavaScript HTTP trigger function processed a request.');
+  let userId = req.query.userId || (req.body && req.body.userId);
 
+  if (!userId) {
+    context.res = {
+        status: 400,
+        body: "Please pass a userId on the query string or in the request body"
+    }
+  }
+  else {
+    // Connection URL
+    const url = 'mongodb://challenge2:ALIe02eyXOBTDUgdYQw65YlWyJAbECu9Vshn6wjdjX8zderEFZyAwsH7KVWlDl7TwWSewBeaMWGKJecxpfsR6A%3D%3D@challenge2.documents.azure.com:10255/?ssl=true';
+      
+    // Database Name
+    const dbName = 'challenge2-db';
 
+    // COllection
+    const collectionName = 'rating-collection';
 
-    if (req.query.productId || (req.body && req.body.productId)) {
+    // client reference
+    let client;
 
-        context.res = {
+    try {
+      // Use connect method to connect to the Server
+      client = await MongoClient.connect(url);
+      const db = client.db(dbName);
+      const col = db.collection(collectionName);
+    
+      // Get all documents that match the query
+      const docs = await col.find({"userId": userId}).toArray();
+      context.log('Length of the database is:' + docs.length);
 
-            // status: 200, /* Defaults to 200 */
-
-            body: "The product name for your product id " + (req.query.productId || req.body.productId) + " is Starfruit Explosion."
-
-        };
-
+      context.res = {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(docs)
+      };
+      //assert.equal(2, docs.length);
+    } 
+    catch (err) {
+      console.log(err.stack);
     }
 
-    else {
-
-        context.res = {
-
-            status: 400,
-
-            body: "Please pass a productId on the query string or in the request body"
-
-        };
-
+    if (client) {
+      client.close();
     }
-
-    context.done();
-
-};              
+  }
+};
