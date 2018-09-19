@@ -71,7 +71,7 @@ module.exports = async function (context, req) {
                         catch(error){
                             context.res = {
                                     status: 400, /* Defaults to 200 */
-                                    body: "Invalid Product ID " + error
+                                    body: "Please Enter valid Product ID " + error
                                 };
                         }                   
                 
@@ -80,13 +80,13 @@ module.exports = async function (context, req) {
             catch(error){
                 context.res = {
                         status: 400, /* Defaults to 200 */
-                        body: "Invalid user ID " + error
+                        body: "Please enter valid user ID " + error
                     };
                     }}
     else{
                 context.res = {
                     status: 404,
-                    body: "Please enter userId and ProductId"
+                    body: "Please enter ProductId and userId"
                 }
             }
 
