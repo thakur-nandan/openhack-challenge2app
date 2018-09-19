@@ -9,7 +9,7 @@ module.exports = async function (context, req) {
         context.log('JavaScript HTTP trigger function processed a request.');
 
         // Connection URL
-        const url = 'mongodb://challenge2:ALIe02eyXOBTDUgdYQw65YlWyJAbECu9Vshn6wjdjX8zderEFZyAwsH7KVWlDl7TwWSewBeaMWGKJecxpfsR6A%3D%3D@challenge2.documents.azure.com:10255/?ssl=true';
+        const url = process.env["DB_Connection_String"];
         
         // Database Name
         const dbName = 'challenge2-db';
